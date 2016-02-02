@@ -8,7 +8,6 @@ Also, placing the sensors to close to a crossing or trackswitch made the trains 
 - trainswitches beacuse there alread was a train on the switch because the trains didnt have time to stop
 - crossings beacuse the fast train could run into the tail of the slow train.
 
-For the same reason the max speed that our traintrack can handle is 15. Otherwise the trains will collide at the crossing and the train will cover a switch when trying to flip it.
 //+++++++++++++++++++++++++++++++++++++++++++++++++++//
 
 Choice of critical sections
