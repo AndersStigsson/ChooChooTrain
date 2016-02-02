@@ -12,5 +12,37 @@ For the same reason the max speed that our traintrack can handle is 15. Otherwis
 //+++++++++++++++++++++++++++++++++++++++++++++++++++//
 
 Choice of critical sections
+//+++++++++++++++++++++++++++++++++++++++++++++++++++//
+
+We chose to make every railroad where only one train can go at the same time
+as critical sections. That is quite obvious since the trains would collide
+otherwise. We also chose to make the way without turns the "main" railroad and
+only take an alternate route if the main road were occupied by the other
+train. This means that we decided to have every part of the main road as
+critical sections but not the smaller alternative roads. 
+
+We decided that all parts that included an end station should be a critical
+section that was acquired when entering that part and kept until the train had
+gone into reverse and left the end station part.
+//+++++++++++++++++++++++++++++++++++++++++++++++++++//
+
 Maximum train speed and the reason for it
+//+++++++++++++++++++++++++++++++++++++++++++++++++++//
+
+As mentioned earlier the max speed of the trains are 15 but is easily
+changeable to accept higher speeds by moving the sensors further from the
+crossing and switches. If we were to try and run the trains at speeds greater
+than 15 in this version of the map the trains will sooner or later collide or
+try to flip a switch when there is a train on it, since the trains don't
+manage to stop before the switch/crossing.
+//+++++++++++++++++++++++++++++++++++++++++++++++++++//
+
 How you tested your solution
+//+++++++++++++++++++++++++++++++++++++++++++++++++++//
+
+We've tested the solution by running the trains for quite some time at max
+speed as well as speed=1, and also when one train goes at max speed while the
+other is running at the speed 1. 
+//+++++++++++++++++++++++++++++++++++++++++++++++++++//
+
+
