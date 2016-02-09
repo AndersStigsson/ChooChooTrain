@@ -28,7 +28,7 @@ public class Train implements Runnable {
 				int status = sensor.getStatus();
 				
 				if(firstEvent) {
-					//(13,3)
+					//(15,3)
 					if(sensP.equals(Lab1.s0)) {
 						movingUp = false;
 						Lab1.sem2.acquire();
@@ -39,7 +39,7 @@ public class Train implements Runnable {
 					}
 					firstEvent = false;
 				} else {
-					//(13,3)
+					//(15,3)
 					if(sensP.equals(Lab1.s0) && status == ACTIVE) {
 						if(movingUp) {		
 							tsi.setSpeed(id, 0);
@@ -50,7 +50,7 @@ public class Train implements Runnable {
 						} else {
 							movingUp = false;
 						}
-					//(7,7)
+					//(6,6)
 					} else if(sensP.equals(Lab1.s1) && status == ACTIVE) {
 						if(!movingUp) {
 							tsi.setSpeed(id, 0);
@@ -59,7 +59,7 @@ public class Train implements Runnable {
 						} else {
 							Lab1.sem1.release();
 						}
-					//(9,7)
+					//(11,7)
 					} else if (sensP.equals(Lab1.s2) && status == ACTIVE) {
 						if(movingUp) {
 							tsi.setSpeed(id, 0);
@@ -68,7 +68,7 @@ public class Train implements Runnable {
 						} else {
 							Lab1.sem1.release();
 						}
-					//(16,7)
+					//(15,7)
 					} else if (sensP.equals(Lab1.s3) && status == ACTIVE) {
 						if(!movingUp) {
 							tsi.setSpeed(id, 0);							
@@ -80,7 +80,7 @@ public class Train implements Runnable {
 						} else {
 							Lab1.sem3.release();
 						}
-					//(18,7)
+					//(19,9)
 					} else if (sensP.equals(Lab1.s4) && status == ACTIVE) {
 						if(movingUp) {
 							if(Lab1.sem2.tryAcquire()) {
@@ -95,7 +95,7 @@ public class Train implements Runnable {
 								tsi.setSwitch(15,9, LEFT);
 							}
 						}
-					//(14,9)
+					//(12,9)
 					} else if (sensP.equals(Lab1.s6) && status == ACTIVE) {
 						if(movingUp) {		
 							tsi.setSpeed(id, 0);
@@ -106,7 +106,7 @@ public class Train implements Runnable {
 						} else {
 							Lab1.sem3.release();
 						}
-					//5,9
+					//(7,9)
 					} else if (sensP.equals(Lab1.s7) && status == ACTIVE) {
 						if(!movingUp) {		
 							tsi.setSpeed(id,0);
@@ -118,7 +118,7 @@ public class Train implements Runnable {
 						} else {
 							Lab1.sem5.release();
 						}
-					//3,9
+					//(1,10)
 					} else if (sensP.equals(Lab1.s8) && status == ACTIVE) {
 						if(movingUp) {		
 							if(Lab1.sem4.tryAcquire()) {
@@ -135,7 +135,7 @@ public class Train implements Runnable {
 								tsi.setSwitch(3,11,RIGHT);
 							}		
 						}
-					//2,11
+					//(6,11)
 					} else if (sensP.equals(Lab1.s10) && status == ACTIVE) {
 						if(movingUp) {		
 							tsi.setSpeed(id, 0);
@@ -147,7 +147,7 @@ public class Train implements Runnable {
 						} else {
 							Lab1.sem5.release();
 						}
-					//12,11
+					//(15,11)
 					} else if (sensP.equals(Lab1.s11) && status == ACTIVE) {
 						if(!movingUp) {		
 							tsi.setSpeed(id, 0);
@@ -160,7 +160,7 @@ public class Train implements Runnable {
 							movingUp = true;
 							
 						}	
-					//8,6
+					//(8,5)
 					} else if (sensP.equals(Lab1.s12) && status == ACTIVE) {
 						if(!movingUp) {		
 							tsi.setSpeed(id, 0);
@@ -170,7 +170,7 @@ public class Train implements Runnable {
 						} else {
 							Lab1.sem1.release();
 						}
-					//9,8
+					//(10,8)
 					} else if (sensP.equals(Lab1.s13) && status == ACTIVE) {
 						if(movingUp) {		
 							tsi.setSpeed(id, 0);
@@ -180,7 +180,7 @@ public class Train implements Runnable {
 						} else {
 							Lab1.sem1.release();
 						}
-					//17,8
+					//(15,8)
 					} else if (sensP.equals(Lab1.s14) && status == ACTIVE) {
 						if(!movingUp) {		
 							tsi.setSpeed(id, 0);
@@ -191,7 +191,7 @@ public class Train implements Runnable {
 						} else {
 							Lab1.sem3.release();
 						}
-					//15,10
+					//(13,10)
 					} else if (sensP.equals(Lab1.s15) && status == ACTIVE) {
 						if(movingUp) {		
 							tsi.setSpeed(id,0);
@@ -202,7 +202,7 @@ public class Train implements Runnable {
 						} else {
 							Lab1.sem3.release();
 						}
-					//5,10
+					//6,10
 					} else if (sensP.equals(Lab1.s16) && status == ACTIVE) {
 						if(!movingUp) {		
 							tsi.setSpeed(id,0);
@@ -214,7 +214,7 @@ public class Train implements Runnable {
 							Lab1.sem5.release();
 							tsi.setSwitch(4,9,LEFT);
 						}
-					//3,13
+					//4,13
 					} else if (sensP.equals(Lab1.s17) && status == ACTIVE) {
 						if(movingUp) {		
 							tsi.setSpeed(id,0);
@@ -225,7 +225,7 @@ public class Train implements Runnable {
 						} else {
 							Lab1.sem5.release();
 						}
-					//12,14
+					//15,13
 					} else if (sensP.equals(Lab1.s18) && status == ACTIVE) {
 						if(!movingUp) {		
 							tsi.setSpeed(id, 0);
@@ -238,7 +238,7 @@ public class Train implements Runnable {
 							movingUp = true;
 						}
 						System.out.println("Train: " + id + " movingUp: " + movingUp);
-					//14,5
+					//15,5
 					} else if (sensP.equals(Lab1.s19) && status == ACTIVE) {
 						if(movingUp) {		
 							tsi.setSpeed(id,0);

@@ -28,7 +28,7 @@ public class Train implements Runnable {
 				int status = sensor.getStatus();
 				
 				if(firstEvent) {
-					//(13,3)
+					//(15,3)
 					if(sensP.equals(Lab1.s0)) {
 						movingUp = false;
 						Lab1.sem2.acquire();
@@ -39,7 +39,7 @@ public class Train implements Runnable {
 					}
 					firstEvent = false;
 				} else {
-					//(13,3)
+					//(15,3)
 					if(sensP.equals(Lab1.s0) && status == ACTIVE) {
 						if(movingUp) {		
 							tsi.setSpeed(id, 0);
@@ -219,6 +219,7 @@ public class Train implements Runnable {
 						if(movingUp) {		
 							tsi.setSpeed(id,0);
 							Lab1.sem5.acquire();
+							tsi.setSwitch(3, 11, RIGHT);
 							tsi.setSpeed(id, speed);
 						
 						} else {
