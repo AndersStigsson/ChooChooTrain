@@ -39,11 +39,9 @@ public class Train implements Runnable {
 					//(15,3)
 					if(sensP.equals(Lab2.s0)) {
 						movingUp = false;
-						//Lab2.sem2.acquire();
 						nStationMonitor.enter();
 					} else {
 						movingUp = true;
-						//Lab2.sem6.acquire();
 						sStationMonitor.enter();
 						
 					}
@@ -64,11 +62,9 @@ public class Train implements Runnable {
 					} else if(sensP.equals(Lab2.s1) && status == ACTIVE) {
 						if(!movingUp) {
 							tsi.setSpeed(id, 0);
-							//Lab2.sem1.acquire();
 							xSectionMonitor.enter();
 							tsi.setSpeed(id, speed);
 						} else {
-							//Lab2.sem1.release();
 							xSectionMonitor.leave();
 						}
 					//(11,7)
@@ -76,25 +72,20 @@ public class Train implements Runnable {
 						if(movingUp) {
 							tsi.setSpeed(id, 0);
 							xSectionMonitor.enter();
-							//Lab2.sem1.acquire();
 							tsi.setSpeed(id, speed);
 						} else {
-							//Lab2.sem1.release();
 							xSectionMonitor.leave();
 						}
 					//(15,7)
 					} else if (sensP.equals(Lab2.s3) && status == ACTIVE) {
 						if(!movingUp) {
-							tsi.setSpeed(id, 0);							
-							//Lab2.sem3.acquire();
+							tsi.setSpeed(id, 0);	
 							eastTurnMonitor.enter();							
 							tsi.setSwitch(17,7,RIGHT);
 							tsi.setSpeed(id, speed);
-							//Lab2.sem2.release();
 							nStationMonitor.leave();
 							
 						} else {
-							//Lab2.sem3.release();
 							eastTurnMonitor.leave();
 						}
 					//(19,9)
@@ -104,13 +95,13 @@ public class Train implements Runnable {
 								mSectionMonitor.leave();
 								onMainTrack = false;
 							}
-							if(nStationMonitor.tryEnter()) {
+							if(nStationMonitor.checkMainTrack()) {
 								tsi.setSwitch(17,7,RIGHT);
 							} else {
 								tsi.setSwitch(17,7,LEFT);
 							}
 						} else {
-							if(mSectionMonitor.tryEnter()) {
+							if(mSectionMonitor.checkMainTrack()) {
 								tsi.setSwitch(15,9, RIGHT);
 								onMainTrack = true;
 							} else {
@@ -121,33 +112,29 @@ public class Train implements Runnable {
 					} else if (sensP.equals(Lab2.s6) && status == ACTIVE) {
 						if(movingUp) {		
 							tsi.setSpeed(id, 0);
-							//Lab2.sem3.acquire();
 							eastTurnMonitor.enter();
 							tsi.setSwitch(15,9,RIGHT);
 							tsi.setSpeed(id, speed);
 							
 						} else {
-							//Lab2.sem3.release();
 							eastTurnMonitor.leave();
 						}
 					//(7,9)
 					} else if (sensP.equals(Lab2.s7) && status == ACTIVE) {
 						if(!movingUp) {		
 							tsi.setSpeed(id,0);
-							//Lab2.sem5.acquire();
 							westTurnMonitor.enter();
 							tsi.setSwitch(4,9, LEFT);
 							tsi.setSpeed(id, speed);
 							
 						
 						} else {
-							//Lab2.sem5.release();
 							westTurnMonitor.leave();
 						}
 					//(1,10)
 					} else if (sensP.equals(Lab2.s8) && status == ACTIVE) {
 						if(movingUp) {		
-							if(mSectionMonitor.tryEnter()) {
+							if(mSectionMonitor.checkMainTrack()) {
 								onMainTrack = true;
 								tsi.setSwitch(4,9,LEFT);
 							} else {
@@ -158,7 +145,7 @@ public class Train implements Runnable {
 								mSectionMonitor.leave();
 								onMainTrack = false;
 							}
-							if(sStationMonitor.tryEnter()) {
+							if(sStationMonitor.checkMainTrack()) {
 								tsi.setSwitch(3,11,LEFT);
 							} else {
 								tsi.setSwitch(3,11,RIGHT);
@@ -168,14 +155,11 @@ public class Train implements Runnable {
 					} else if (sensP.equals(Lab2.s10) && status == ACTIVE) {
 						if(movingUp) {		
 							tsi.setSpeed(id, 0);
-							//Lab2.sem5.acquire();
 							westTurnMonitor.enter();
 							tsi.setSwitch(3,11,LEFT);
 							tsi.setSpeed(id, speed);
-							//Lab2.sem6.release();
 							sStationMonitor.leave();
 						} else {
-							//Lab2.sem5.release();
 							westTurnMonitor.leave();
 						}
 					//(15,11)
@@ -195,63 +179,53 @@ public class Train implements Runnable {
 					} else if (sensP.equals(Lab2.s12) && status == ACTIVE) {
 						if(!movingUp) {		
 							tsi.setSpeed(id, 0);
-							//Lab2.sem1.acquire();
 							xSectionMonitor.enter();
 							tsi.setSpeed(id, speed);
 						
 						} else {
-							//Lab2.sem1.release();
 							xSectionMonitor.leave();
 						}
 					//(10,8)
 					} else if (sensP.equals(Lab2.s13) && status == ACTIVE) {
 						if(movingUp) {		
 							tsi.setSpeed(id, 0);
-							//Lab2.sem1.acquire();
 							xSectionMonitor.enter();
 							tsi.setSpeed(id, speed);
 						
 						} else {
-							//Lab2.sem1.release();
 							xSectionMonitor.leave();
 						}
 					//(15,8)
 					} else if (sensP.equals(Lab2.s14) && status == ACTIVE) {
 						if(!movingUp) {		
 							tsi.setSpeed(id, 0);
-							//Lab2.sem3.acquire();
 							eastTurnMonitor.enter();
 							tsi.setSwitch(17,7, LEFT);							
 							tsi.setSpeed(id, speed);
 						
 						} else {
-							//Lab2.sem3.release();
 							eastTurnMonitor.leave();
 						}
 					//(13,10)
 					} else if (sensP.equals(Lab2.s15) && status == ACTIVE) {
 						if(movingUp) {		
 							tsi.setSpeed(id,0);
-							//Lab2.sem3.acquire();
 							eastTurnMonitor.enter();
 							tsi.setSwitch(15,9, LEFT);
 							tsi.setSpeed(id, speed);
 						
 						} else {
-							//Lab2.sem3.release();
 							eastTurnMonitor.leave();
 						}
 					//6,10
 					} else if (sensP.equals(Lab2.s16) && status == ACTIVE) {
 						if(!movingUp) {		
 							tsi.setSpeed(id,0);
-							//Lab2.sem5.acquire();
 							westTurnMonitor.enter();
 							tsi.setSwitch(4,9,RIGHT);
 							tsi.setSpeed(id, speed);
 						
 						} else {
-							//Lab2.sem5.release();
 							westTurnMonitor.leave();
 							tsi.setSwitch(4,9,LEFT);
 						}
@@ -259,13 +233,11 @@ public class Train implements Runnable {
 					} else if (sensP.equals(Lab2.s17) && status == ACTIVE) {
 						if(movingUp) {		
 							tsi.setSpeed(id,0);
-							//Lab2.sem5.acquire();
 							westTurnMonitor.enter();
 							tsi.setSwitch(3, 11, RIGHT);
 							tsi.setSpeed(id, speed);
 						
 						} else {
-							//Lab2.sem5.release();
 							westTurnMonitor.leave();
 						}
 					//15,13
@@ -338,13 +310,12 @@ private	static class TrainMonitor {
 		
 	}
 
-	public boolean tryEnter() throws InterruptedException{
+	public boolean checkMainTrack() throws InterruptedException{
 		lock.lock();
 		if(permits == 0) {
 			lock.unlock();
 			return false;	
 		}
-		//permits = permits - 1;
 		enter();
 		lock.unlock();
 		return true;
