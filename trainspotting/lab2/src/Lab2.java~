@@ -14,8 +14,8 @@ public class Lab2 {
 		
 		try {
 			Lock lock = new ReentrantLock();
-			Train train1 = new Train(speed1, 1, lock);
-			Train train2 = new Train(speed2, 2, lock);
+			Train train1 = new Train(speed1, 1);
+			Train train2 = new Train(speed2, 2);
 			Thread t1 = new Thread(train1);
 			Thread t2 = new Thread(train2);
 
