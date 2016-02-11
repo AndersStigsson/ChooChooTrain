@@ -8,7 +8,7 @@ Instead of acquiring a semaphore we call the function enter() in the monitor cor
 Our monitors have 3 functions:
 enter() - Called when wanting to enter a critical section
 leave() - Called when leaving a critical section
-tryEnter() - Called when reaching a two-track critical section to see whether first one is okay, otherwise take alternative route. 
+checkMainTrack - Called when reaching a two-track critical section to see whether the main track is okay, otherwise take alternative route. 
 
 We have also fixed the part about leaving the monitor too early when going on the double track, by checking with a boolean onMainTrack whether we were on the main track (leave the monitor) or on the alternative route (don't leave monitor).
 
