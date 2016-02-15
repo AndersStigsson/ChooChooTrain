@@ -289,24 +289,22 @@ private	static class TrainMonitor {
 	public void enter() throws InterruptedException {
 		lock.lock();
 		try {		
-			if(permits == 0) {
+			while(permits == 0) {
 				allowedEnter.await();
 			}
-		} finally {
-			permits = permits - 1;
-			lock.unlock();
 		}
+		permits = permits - 1;
+		lock.unlock();
 
 	}
 		
 	public void leave() {
 		lock.lock();
+		permits = permits + 1;
 		try {
 			allowedEnter.signal();
-		} finally {
-			permits = permits + 1;
-			lock.unlock();
-		}
+		} 
+		lock.unlock();
 		
 	}
 
