@@ -1,0 +1,17 @@
+Oskar Rutqvist
+Anders Stigsson
+
+What we did different from Lab1
+
+Instead of acquiring a semaphore we call the function enter() in the monitor corresponding to the critical section that we want to enter. When leaving the critical section we call leave() from the same monitor. 
+
+Our monitors have 3 functions:
+enter() - Called when wanting to enter a critical section
+leave() - Called when leaving a critical section
+checkMainTrack - Called when reaching a two-track critical section to see whether the main track is okay, otherwise take alternative route. 
+
+We have also fixed the part about leaving the monitor too early when going on the double track, by checking with a boolean onMainTrack whether we were on the main track (leave the monitor) or on the alternative route (don't leave monitor).
+
+The TrainMonitor is a private class inside the Train class, every monitor has 1 permit meaning that only 1 train is allowed on the track at the same time.
+
+We have used 1 condition variable in the Monitor to be able to make sure that a train doesn't drive on when there is another train in that critical section.
