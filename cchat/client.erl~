@@ -32,7 +32,7 @@ handle(St, {connect, Server}) ->
 handle(St, disconnect) ->
 	case St#client_st.server of
 		disconnected ->
-		    {reply, {error, user_not_connected, "You are not connected"}, St};
+		    {reply, {error, not_implemented, "Not implemented"}, St};
 
 		_ ->
 			NewState = St#client_st{server = disconnected},
