@@ -46,7 +46,7 @@ handle(St, {join, Channel}) ->
 		_ ->
 			case lists:member(Channel, St#client_st.channels) of
 				false ->
-					Response = genserver:request(St#client_st.server, {join, Channel}),
+					Response = genserver:request(St#client_st.server, {join, Channel, self()}),
 					case Response of
 						ok ->
 							NewState = St#client_st{channels = [Channel | St#client_st.channels]},
@@ -56,7 +56,7 @@ handle(St, {join, Channel}) ->
 					end;
 				_ ->
 					{reply, {error, user_already_connected, "Already in this chatroom"}, St}
-			end;
+			end
 	end;
     %{reply, {error, not_implemented, "Not implemented"}, St} ;
 
@@ -69,7 +69,7 @@ handle(St, {leave, Channel}) ->
 		_ ->
 			case lists:member(Channel, St#client_st.channels) of
 				true ->
-					Response = genserver:request(St#client_st.server, {leave, Channel}),
+					Response = genserver:request(St#client_st.server, {leave, Channel, self()}),
 						case Response of
 							ok ->
 								NewState = St#client_st{channels = lists:delete(Channel, St#client_st.channels)},
@@ -79,7 +79,7 @@ handle(St, {leave, Channel}) ->
 						end;
 				_ ->
 					{reply, {error, user_already_connected, "Already in this chatroom"}, St}
-			end;
+			end
 	end;
 	
     % {reply, ok, St} ;
@@ -89,8 +89,7 @@ handle(St, {leave, Channel}) ->
 handle(St, {msg_from_GUI, Channel, Msg}) ->
 
 	%ChannelAtom = list_to_atom(Channel),
-	genserver:request(St#client_st.server, {msg, Msg}),
-	gen_server:call(list_to_atom(GUIName), {msg_to_GUI, Chatroom, Name++"> "++Msg}),
+	genserver:request(list_to_atom(Channel), {msg, Msg}),
     {reply, ok, St} ;
     %{reply, {error, not_implemented, "Not implemented"}, St} ;
 

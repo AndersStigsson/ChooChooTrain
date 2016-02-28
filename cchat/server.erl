@@ -18,6 +18,38 @@ initial_state(ServerName) ->
 %% {reply, Reply, NewState}, where Reply is the reply to be sent to the client
 %% and NewState is the new state of the server.
 
+% Join channel
+handle(St, {join, Channel, User}) ->
+	case lists:member(Channel, St#server_st.channels) of
+		false ->
+			ChannelPid = genserver:start(list_to_atom(Channel), channel:initial_state(Channel), fun channel:handle/2),
+			%io:fprint("ChannelPid = ~p~n", ChannelPid),
+			Response = genserver:request(ChannelPid, {join, User}),
+			case Response of
+				ok ->
+					NewState = St#server_st{channels = [Channel | St#server_st.channels]},
+					{reply, ok, NewState};
+				_ ->
+					Response
+			end;
+		_ ->
+			Response = genserver:request(list_to_atom(Channel), {join, User}),
+			{reply, ok, St}
+			
+	end;
+    %{reply, {error, not_implemented, "Not implemented"}, St} ;
+
+handle(St, {leave, Channel, User}) ->
+	Response = genserver:request(list_to_atom(Channel), {leave, User}),
+	case Response of
+				ok ->
+					NewState = St#server_st{channels = lists:delete(Channel, St#server_st.channels)},
+					{reply, ok, NewState};
+				_ ->
+					Response
+	end;
+	
+
 handle(St, Request) ->
     io:fwrite("Server received: ~p~n", [Request]),
     Response = "hi!",
