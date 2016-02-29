@@ -33,7 +33,7 @@ handle(St, {join, Channel, User}) ->
 					Response
 			end;
 		_ ->
-			Response2 = genserver:request(Channel, {join, User}),
+			Response = genserver:request(list_to_atom(Channel), {join, User}),
 			{reply, ok, St}
 			
 	end;
@@ -52,6 +52,6 @@ handle(St, {leave, Channel, User}) ->
 
 handle(St, Request) ->
     io:fwrite("Server received: ~p~n", [Request]),
-    Response = "hi!",
+    Response = atom_to_list(St#server_st.server) ++ " greets you",
     io:fwrite("Server is sending: ~p~n", [Response]),
     {reply, Response, St}.

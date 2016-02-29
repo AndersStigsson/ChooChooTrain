@@ -7,7 +7,7 @@
 
 %% Produce initial state
 initial_state(Nick, GUIName) ->
-    #client_st {nick = Nick, gui = GUIName }.
+    #client_st{nick = Nick, gui = GUIName}.
 
 %% ---------------------------------------------------------------------------
 
@@ -89,7 +89,7 @@ handle(St, {leave, Channel}) ->
 handle(St, {msg_from_GUI, Channel, Msg}) ->
 
 	%ChannelAtom = list_to_atom(Channel),
-	genserver:request(St#client_st.server, {msg, Msg}),
+	genserver:request(list_to_atom(Channel), {msg, Msg, user(St)}), % sends itself as user to be able to remove from the recievers of the msg.
     {reply, ok, St} ;
     %{reply, {error, not_implemented, "Not implemented"}, St} ;
 
@@ -106,7 +106,6 @@ handle(St, {nick, Nick}) ->
 		_ ->	
     		{reply, {error, user_already_connected, "Can't change nick when connected"}, St}
 	end;
-
 
 
 %% Incoming message
