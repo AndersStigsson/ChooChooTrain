@@ -19,12 +19,12 @@ initial_state(ServerName) ->
 %% and NewState is the new state of the server.
 
 % Join channel
-handle(St, {join, Channel, User}) ->
+handle(St, {join, Channel, UserPid}) ->
 	case lists:member(Channel, St#server_st.channels) of
 		false ->
 			ChannelPid = genserver:start(list_to_atom(Channel), channel:initial_state(Channel), fun channel:handle/2),
 			%io:fprint("ChannelPid = ~p~n", ChannelPid),
-			Response = genserver:request(ChannelPid, {join, User}),
+			Response = genserver:request(ChannelPid, {join, UserPid}),
 			case Response of
 				ok ->
 					NewState = St#server_st{channels = [Channel | St#server_st.channels]},
@@ -33,7 +33,7 @@ handle(St, {join, Channel, User}) ->
 					Response
 			end;
 		_ ->
-			Response = genserver:request(list_to_atom(Channel), {join, User}),
+			Response = genserver:request(list_to_atom(Channel), {join, UserPid}),
 			{reply, ok, St}
 			
 	end;
