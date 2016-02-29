@@ -4,7 +4,7 @@
 %   gui: the name (or Pid) of the GUI process.
 %   nick: name of the user
 %   server: either disconnected or serverAtom for the server its connected to.
--record(client_st, {gui, nick, server = disconnected}).
+-record(client_st, {gui, nick, server = disconnected, channels = []}).
 
 % This record defines the structure of the server process.
 % Add whatever other fields you need.

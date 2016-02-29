@@ -8,7 +8,7 @@
 
 % This record defines the structure of the server process.
 % Add whatever other fields you need.
--record(server_st, {server, channels = []}).
+-record(server_st, {server, channels = [], users =[]}).
 
 % This record defines the structure of the channel process.
 % It contains the following fields:

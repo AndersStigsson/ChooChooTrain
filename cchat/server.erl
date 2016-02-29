@@ -18,6 +18,18 @@ initial_state(ServerName) ->
 %% {reply, Reply, NewState}, where Reply is the reply to be sent to the client
 %% and NewState is the new state of the server.
 
+%% Connect to server
+handle(St, {connect, Nick}) ->
+	case lists:member(Nick, St#server_st.users) of
+		false ->
+			NewState = St#server_st{users = [Nick | St#server_st.users]},		
+			{reply, ok, NewState};
+			%{reply, {error, not_implemented, "Not implemented"}, St} ;
+		_ ->
+			{reply, {error, user_already_connected, "Not implemented"}, St}
+		end;
+
+
 % Join channel
 handle(St, {join, Channel, UserPid}) ->
 	case lists:member(Channel, St#server_st.channels) of
@@ -55,3 +67,5 @@ handle(St, Request) ->
     Response = "hi!",
     io:fwrite("Server is sending: ~p~n", [Response]),
     {reply, Response, St}.
+
+	

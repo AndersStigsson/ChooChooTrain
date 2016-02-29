@@ -18,14 +18,14 @@ handle(St, {leave, User}) ->
 
 % Sending messages
 handle(St, {msg, Msg, {Sender, User}}) ->  %user@{senderNick, clientPid}
-	
 	case lists:member(User, St#channel_st.users) of
 		true ->
 			SendToAllOfThese = lists:delete(User, St#channel_st.users),
 			sendToUsers(St, SendToAllOfThese, Sender, Msg),
-    		{reply, ok, St}.
-    	_ -> 
-   			{reply, {error, user_not_joined, "Not in this channel."}, St} ;
+			{reply, ok, St};
+		_ -> 
+   			{reply, {error, user_not_joined, "Not in this channel."}, St}
+	end.
 
 
 % The actual sending of the message via the server.
@@ -38,6 +38,6 @@ sendToUsers(_, [], _, _) ->
   ok;
 
 sendToUsers(St, [ Head | Tail ], Sender, Msg) ->
-  spawn(fun() -> send(St, H, Sender, Msg) end),
-  sendToUsers(St, T, Sender, Msg).
+  spawn(fun() -> send(St, Head, Sender, Msg) end),
+  sendToUsers(St, Tail, Sender, Msg).
 
