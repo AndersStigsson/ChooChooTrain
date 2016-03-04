@@ -1076,4 +1076,3 @@ summary(MTimes) ->
     Avg = Tot / length(Times),
     Med = lists:nth(length(Times) div 2, lists:sort(Times)),
     putStrLn(red("Time elapsed: ~wms average / ~wms median"), [round(Avg), round(Med)]).
-

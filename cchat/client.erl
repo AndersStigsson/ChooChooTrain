@@ -22,14 +22,14 @@ initial_state(Nick, GUIName) ->
 handle(St, {connect, Server}) ->
 	ServerAtom = list_to_atom(Server),
 	NewState = St#client_st{server = ServerAtom	},
-	Response = 
-	
+	 
+
 	case catch genserver:request(ServerAtom, {connect, NewState#client_st.nick}) of
 		ok ->
 			{reply, ok, NewState};
 		{EXIT, _} -> {reply, {error, server_not_reached, "Server unreachable"}, St};
-		_ ->
-			{reply, {error, user_already_connected, "Not implemented"}, St}
+		{error, nick_taken, _} ->
+			{reply,{error, nick_taken, "Nick already taken"}, St}
 	end;
 	%{reply, {error, not_implemented, "Not implemented"}, St} ;
 	
@@ -122,6 +122,9 @@ handle(St, {nick, Nick}) ->
 		_ ->	
     		{reply, {error, user_already_connected, "Can't change nick when connected"}, St}
 	end;
+
+handle(St, {func, Input}) ->
+	fun() -> func(Input) end;
 
 
 %% Incoming message

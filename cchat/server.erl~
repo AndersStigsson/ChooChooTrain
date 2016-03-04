@@ -19,15 +19,15 @@ initial_state(ServerName) ->
 %% and NewState is the new state of the server.
 
 %% Connect to server
-handle(St, {connect, Server, Nick}) ->
+handle(St, {connect, Nick}) ->
 	case lists:member(Nick, St#server_st.users) of
 		false ->
 			NewState = St#server_st{users = [Nick | St#server_st.users]},		
 			{reply, ok, NewState};
 			%{reply, {error, not_implemented, "Not implemented"}, St} ;
 		_ ->
-			{reply, {error, user_already_connected, "Not implemented"}, St}
-		end;
+			{reply, {error, nick_taken, "Not implemented"}, St}
+	end;
 
 
 % Join channel
@@ -60,12 +60,21 @@ handle(St, {leave, Channel, User}) ->
 				_ ->
 					Response
 	end;
-	
+
+handle(St, {assign_task, Function, Input}) ->
+	Users = St#server_st.users,
+	assign_tasks(Users, Function(Input)
+	;	
 
 handle(St, Request) ->
     io:fwrite("Server received: ~p~n", [Request]),
     Response = "hi!",
     io:fwrite("Server is sending: ~p~n", [Response]),
     {reply, Response, St}.
+
+assign_tasks([], _) -> [] ;
+assign_tasks(Users, Tasks) ->
+  [  {lists:nth(((N-1) rem length(Users)) + 1, Users), Task}
+  || {N,Task} <- lists:zip(lists:seq(1,length(Tasks)), Tasks) ].
 
 	
