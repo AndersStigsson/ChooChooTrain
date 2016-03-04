@@ -21,10 +21,9 @@ initial_state(Nick, GUIName) ->
 %% Connect to server
 handle(St, {connect, Server}) ->
 	ServerAtom = list_to_atom(Server),
-	NewState = St#client_st{server = ServerAtom	},
-	 
-
-	case catch genserver:request(ServerAtom, {connect, NewState#client_st.nick}) of
+	NewState = St#client_st{server = ServerAtom	}, 
+	
+	case catch genserver:request(ServerAtom, {connect, user(NewState)}) of
 		ok ->
 			{reply, ok, NewState};
 		{EXIT, _} -> {reply, {error, server_not_reached, "Server unreachable"}, St};
@@ -123,9 +122,10 @@ handle(St, {nick, Nick}) ->
     		{reply, {error, user_already_connected, "Can't change nick when connected"}, St}
 	end;
 
-handle(St, {func, Input}) ->
-	fun() -> func(Input) end;
 
+%% Task execution.
+handle(_, {executefunc, F, I}) ->
+	F(I);
 
 %% Incoming message
 handle(St = #client_st { gui = GUIName }, {incoming_msg, Channel, Name, Msg}) ->

@@ -23,12 +23,5 @@ start2() ->
     client(),
     client().
 
-send_job(Server, F, Inputs) ->
-	ServerAtom = list_to_atom(Server),
-	genserver:request(ServerAtom, {assign_task, F, Inputs}).	
-
-
-
-
-
-
+send_job(Server, Func, Inputs) ->
+	genserver:request(list_to_atom(Server), {executefunc, Func, Inputs}).
