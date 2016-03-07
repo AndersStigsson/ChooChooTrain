@@ -124,8 +124,9 @@ handle(St, {nick, Nick}) ->
 
 
 %% Task execution.
-handle(_, {executefunc, F, I}) ->
-	F(I);
+handle(St, {executefunc, F, I}) ->
+	Response = F(I),
+	{reply, Response, St};
 
 %% Incoming message
 handle(St = #client_st { gui = GUIName }, {incoming_msg, Channel, Name, Msg}) ->

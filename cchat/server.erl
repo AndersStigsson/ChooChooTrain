@@ -21,7 +21,7 @@ initial_state(ServerName) ->
 %% Connect to server
 handle(St, {connect, {Nick, ClientId}} ) ->
 	case checkNick(St#server_st.users, Nick) of
-		false ->
+		true ->
 			NewState = St#server_st{users = [{Nick, ClientId} | St#server_st.users]},		
 			{reply, ok, NewState};
 			%{reply, {error, not_implemented, "Not implemented"}, St} ;
@@ -44,7 +44,7 @@ handle(St, {join, Channel, UserPid}) ->
 					Response
 			end;
 		_ ->
-			Response = genserver:request(list_to_atom(Channel), {join, UserPid}),
+			genserver:request(list_to_atom(Channel), {join, UserPid}),
 			{reply, ok, St}
 			
 	end;
@@ -60,12 +60,10 @@ handle(St, {leave, Channel, User}) ->
 					Response
 	end;
 
-handle(St, {assign_task, Function, Input}) ->
-	Users = St#server_st.users,
-	assign_tasks(Users, Function(Input));	
 
 handle(St, {executefunc, F, Inputs}) -> 
-	executeFunctions(F, Inputs, St#server_st.users, St);
+	Response = executeFunctions(F, Inputs, St#server_st.users, St),
+	{reply, Response, St};
 
 handle(St, Request) ->
     io:fwrite("Server received: ~p~n", [Request]),
@@ -74,20 +72,21 @@ handle(St, Request) ->
     {reply, Response, St}.
 
 % Recursive function for assigning a client with a task.
-executeFunctions(_, [], _, St) -> % Basecase, there is no more input to apply the function to.
+executeFunctions(_, [], _, _) -> % Basecase, there is no more input to apply the function to.
 	[]; 
 
 executeFunctions(F, I, [], St) ->
 	executeFunctions(F, I, St#server_st.users, St); % If there are no clients left for the execution of the function for the rest of the inputs then send the entire userlist again.
 
 executeFunctions(F, [H | InputTail], [ {_, Pid} | RemainingUsers ], St) -> % Tells the client (user) to execute the task and puts it first in the list, followed by the rest of the computations.
-	[genserver:request(Pid, {executefunc, F, H}) | executeFunctions(F, InputTail, RemainingUsers, St)].
+	Data = {executefunc, F, H},	
+	[(genserver:request(Pid, Data)) | executeFunctions(F, InputTail, RemainingUsers, St)]. 
 
 
 checkNick([], _) -> true;
 
 checkNick([{Nick, _} | T], NewUserNick) -> 
-	case Nick == NewUserNick of
+	case string:equal(Nick, NewUserNick) of
 		true ->
 			false;
 		false ->

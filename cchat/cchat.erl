@@ -24,4 +24,4 @@ start2() ->
     client().
 
 send_job(Server, Func, Inputs) ->
-	genserver:request(list_to_atom(Server), {executefunc, Func, Inputs}).
+	genserver:request(list_to_atom(Server), {executefunc, Func, Inputs}, infinity).
