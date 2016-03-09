@@ -124,7 +124,7 @@ handle(St, {nick, Nick}) ->
 
 
 %% Task execution.
-handle(St, {executefunc, F, I}) ->
+handle(St, {executeFunc, F, I}) ->
 	Response = F(I),
 	{reply, Response, St};
 

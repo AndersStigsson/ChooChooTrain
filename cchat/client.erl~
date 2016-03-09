@@ -110,7 +110,6 @@ handle(St, {msg_from_GUI, Channel, Msg}) ->
 	end;
 %% Get current nick
 handle(St, whoami) ->
-	io:fwrite(user(St)),
     {reply, St#client_st.nick, St} ;
 
 %% Change nick

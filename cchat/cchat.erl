@@ -27,23 +27,23 @@ send_job(Server, Func, Inputs) ->
 	Users = genserver:request(list_to_atom(Server), {getUsers}),
 	Pids = selectPids(Users),
 	Tasks = makeTaskTuple(Func, Inputs),
-	Users&Tasks = assignTasks(Pids, Tasks),
-	Clients&Refs = [{Client, make_ref(), Task}|| {Client, Task} <- Users&Tasks],
-	Refs = [Ref || {_, Ref, _} <- Clients&Refs],
-	lists:foreach(fun send_job2/1, Clients&Refs),
+	UsersAndTasks = assign_tasks(Pids, Tasks),
+	ClientsAndRefs = [{Client, make_ref(), Task}|| {Client, Task} <- UsersAndTasks],
+	Refs = [Ref || {_, Ref, _} <- ClientsAndRefs],
+	lists:foreach(fun send_job2/1, ClientsAndRefs),
 	handleRefs([], Refs).
 
 send_job2({Client, Ref, Task}) ->
 	MySelf = self(), 
-	spawn(fun() -> MySelf!{Ref, genserver:request(Task)}end).
+	spawn(fun() -> MySelf!{Ref, genserver:request(Client,Task)}end).
 	%genserver:request(Client, Task, infinity).
 
 handleRefs(Values, []) ->
 	Values;
 handleRefs(Values, [Href | TRefs]) ->
 	receive
-		{HRef, Response} ->
-				handleRefs([Values | Response], Trefs)
+		{Href, Response} ->
+				handleRefs(Values ++ [Response], TRefs)
 	end.
 
 selectPids([]) ->
