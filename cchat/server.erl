@@ -61,27 +61,14 @@ handle(St, {leave, Channel, User}) ->
 	end;
 
 
-handle(St, {executefunc, F, Inputs}) -> 
-	Response = executeFunctions(F, Inputs, St#server_st.users, St),
-	{reply, Response, St};
+handle(St, {getUsers}) ->
+	{reply, St#server_st.users, St}; 
 
 handle(St, Request) ->
     io:fwrite("Server received: ~p~n", [Request]),
     Response = "hi!",
     io:fwrite("Server is sending: ~p~n", [Response]),
     {reply, Response, St}.
-
-% Recursive function for assigning a client with a task.
-executeFunctions(_, [], _, _) -> % Basecase, there is no more input to apply the function to.
-	[]; 
-
-executeFunctions(F, I, [], St) ->
-	executeFunctions(F, I, St#server_st.users, St); % If there are no clients left for the execution of the function for the rest of the inputs then send the entire userlist again.
-
-executeFunctions(F, [H | InputTail], [ {_, Pid} | RemainingUsers ], St) -> % Tells the client (user) to execute the task and puts it first in the list, followed by the rest of the computations.
-	Data = {executefunc, F, H},	
-	[(genserver:request(Pid, Data)) | executeFunctions(F, InputTail, RemainingUsers, St)]. 
-
 
 checkNick([], _) -> true;
 

@@ -24,4 +24,39 @@ start2() ->
     client().
 
 send_job(Server, Func, Inputs) ->
-	genserver:request(list_to_atom(Server), {executefunc, Func, Inputs}, infinity).
+	Users = genserver:request(list_to_atom(Server), {getUsers}),
+	Pids = selectPids(Users),
+	Tasks = makeTaskTuple(Func, Inputs),
+	Users&Tasks = assignTasks(Pids, Tasks),
+	Clients&Refs = [{Client, make_ref(), Task}|| {Client, Task} <- Users&Tasks],
+	Refs = [Ref || {_, Ref, _} <- Clients&Refs],
+	lists:foreach(fun send_job2/1, Clients&Refs),
+	handleRefs([], Refs).
+
+send_job2({Client, Ref, Task}) ->
+	MySelf = self(), 
+	spawn(fun() -> MySelf!{Ref, genserver:request(Task)}end).
+	%genserver:request(Client, Task, infinity).
+
+handleRefs(Values, []) ->
+	Values;
+handleRefs(Values, [Href | TRefs]) ->
+	receive
+		{HRef, Response} ->
+				handleRefs([Values | Response], Trefs)
+	end.
+
+selectPids([]) ->
+	[];
+selectPids([{_, Pid}|T]) ->
+	[Pid | selectPids(T)].
+
+makeTaskTuple(_, []) ->
+	[];
+makeTaskTuple(F, [H|T]) ->
+	[{executeFunc, F, H} | makeTaskTuple(F, T)].
+
+assign_tasks([], _) -> [] ;
+assign_tasks(Users, Tasks) ->
+  [  {lists:nth(((N-1) rem length(Users)) + 1, Users), Task}
+  || {N,Task} <- lists:zip(lists:seq(1,length(Tasks)), Tasks) ].
